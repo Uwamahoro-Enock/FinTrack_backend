@@ -75,4 +75,24 @@ router.post("/check-status", async (req, res) => {
   }
 });
 
+router.put("/:id", async (req, res) => {
+  try {
+    const budget = await Budget.findById(req.params.id);
+    if (!budget) {
+      return res.status(404).json({ message: "Budget not found" });
+    }
+
+    // Update fields if they are provided in the request
+    if (req.body.budgetSet !== undefined) budget.budgetSet = req.body.budgetSet;
+    if (req.body.amount !== undefined) budget.amount = req.body.amount;
+    if (req.body.category !== undefined) budget.category = req.body.category;
+    if (req.body.period !== undefined) budget.period = req.body.period;
+
+    const updatedBudget = await budget.save();
+    res.json(updatedBudget);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
 module.exports = router;
