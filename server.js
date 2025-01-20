@@ -17,8 +17,15 @@ app.use(bodyParser.json());
 connectDB();
 
 // Routes
+app.use("/api/auth", require("./routes/auth")); // Make sure this is before other routes
 app.use("/api/transactions", require("./routes/transactions"), routes);
 app.use("/api/budgets", require("./routes/budgets"));
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something broke!' });
+});
 
 // Start the server
 const PORT = process.env.PORT || 5000;
