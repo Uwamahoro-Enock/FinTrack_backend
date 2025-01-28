@@ -1,4 +1,5 @@
 // backend/routes/auth.js
+const jwt = require('jsonwebtoken');
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
@@ -16,11 +17,6 @@ router.post('/', async (req, res) => {
         if (!user) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
-
-        // Debug password check
-        console.log('Attempting password verification...');
-        console.log('Stored hash:', user.password);
-        console.log('Provided password length:', password.length);
         
         // Try password verification
         const isValidPassword = await bcrypt.compare(password, user.password);
@@ -30,8 +26,15 @@ router.post('/', async (req, res) => {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
+        const token = jwt.sign(
+            {userId: user._id, email: user.email},
+            process.env.JWT_SECRET,
+            {expiresIn: '24h'}
+        )
+console.log(token)
         res.json({
             success: true,
+            token: token,
             user: {
                 email: user.email
             }

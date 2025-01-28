@@ -3,7 +3,6 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
-const routes = require('./routes/protectedroutes');
 require("dotenv").config();
 
 // Initialize the app
@@ -18,7 +17,7 @@ connectDB();
 
 // Routes
 app.use("/api/auth", require("./routes/auth")); // Make sure this is before other routes
-app.use("/api/transactions", require("./routes/transactions"), routes);
+app.use("/api/transactions", require("./routes/transactions"));
 app.use("/api/budgets", require("./routes/budgets"));
 
 // Error handling middleware
