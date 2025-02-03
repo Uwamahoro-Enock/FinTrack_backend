@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const connectDB = require("./config/db");
+const secure = require("./middleware/secure")
 
 // Initialize the app
 const app = express();
@@ -15,9 +16,9 @@ app.use(bodyParser.json());
 connectDB();
 
 // Routes
-app.use("/api/auth", require("./routes/auth")); // Make sure this is before other routes
-app.use("/api/transactions", require("./routes/transactions"));
-app.use("/api/budgets", require("./routes/budgets"));
+app.use("/api/auth", secure, require("./routes/auth")); // Make sure this is before other routes
+app.use("/api/transactions", secure, require("./routes/transactions"));
+app.use("/api/budgets", secure, require("./routes/budgets"));
 
 // Error handling middleware
 app.use((err, req, res, next) => {
